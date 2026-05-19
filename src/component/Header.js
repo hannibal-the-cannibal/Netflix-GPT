@@ -3,9 +3,14 @@ import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Header=()=>{
     const navigate= useNavigate();
+    const dispatch= useDispatch();
 
     const user= useSelector((state)=> state.user);
 
@@ -14,14 +19,39 @@ const Header=()=>{
         signOut(auth).then(() => {
         // Sign-out successful
         //Navigate to login page
-        navigate("/");
-
         }).catch((error) => {
         // An error happened.
         navigate("/error")
         });
 
     }
+
+    
+    useEffect(()=>{
+        // Check if user is authenticated and then navigate to browse page
+        // this function is coming from firebase auth and it will listen to the auth state changes
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in at this point
+            const {uid, email, displayName} = user;
+            // dispatch an action to save the user data in the redux store
+
+            dispatch(addUser({uid, email, displayName}));
+            console.log("User is authenticated:", user);
+            navigate("/browse");
+        } else {
+            // User is signed out
+            dispatch(removeUser());
+            navigate("/");
+        }
+    });
+
+    return () => {
+        // Unsubscribe from the auth state changes when the component unmounts
+        unsubscribe();
+    };
+
+    },[]);
 
 
     

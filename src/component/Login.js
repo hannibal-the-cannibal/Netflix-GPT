@@ -53,8 +53,6 @@ const Login=()=>{
                         const {uid, email, displayName} = auth.currentUser;
                         dispatch(addUser({uid: uid, email: email, displayName: displayName}));
                         
-                        //navigate to browse page    
-                        navigate("/browse");
                         }).catch((error) => {
                         // An error occurred
                         setErrorMessage(error.message);
@@ -79,8 +77,6 @@ const Login=()=>{
                     //dispatch an action to save the user data in the redux store
                         const {uid, email, displayName} = userCredential.user;
                         dispatch(addUser({uid: uid, email: email, displayName: displayName}));
-
-                    navigate("/browse");
                 })
                 .catch((error) => {
                     const errorCode = error.code;
