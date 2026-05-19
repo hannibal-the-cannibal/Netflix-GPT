@@ -1,10 +1,18 @@
 import Header from "./Header";
 import { useRef, useState } from "react";
 import checkValidData from "../utils/validate";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword , updateProfile} from "firebase/auth"
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Login=()=>{
+
+    const navigate= useNavigate();
     const[isSignIn, setIsSignIn]=useState(true);
     const [errorMessage, setErrorMessage]=useState(null);
+    const dispatch= useDispatch();
 
     const togglesiginform=()=>{
         // Logic to toggle between sign in and sign up forms
@@ -22,10 +30,65 @@ const Login=()=>{
         const usernameValue= username.current?.value;
         const errorMessage=checkValidData(emailValue, passwordValue);
         setErrorMessage(errorMessage);
-            if(!errorMessage){
-                // Navigate to browse page
-                window.location.href="/browse";
+            if(errorMessage){
+                navigate("/");
+                return;
             }
+            // Sign in or Sign up now 
+            if(!isSignIn){
+                //Sign up code
+                createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+                .then((userCredential) => {
+                    // Signed up 
+                    const user = userCredential.user;
+                    console.log("User signed up:", user);
+
+                    //now update the user profile with the username
+                    updateProfile(auth.currentUser, {
+                        displayName: usernameValue
+                        }).then(() => {
+                        // Profile updated!
+
+                        //dispatch an action to save the user data in the redux store
+                        const {uid, email, displayName} = auth.currentUser;
+                        dispatch(addUser({uid: uid, email: email, displayName: displayName}));
+                        
+                        //navigate to browse page    
+                        navigate("/browse");
+                        }).catch((error) => {
+                        // An error occurred
+                        setErrorMessage(error.message);
+                        });
+
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error("Error signing up:", errorCode, errorMessage);
+                    setErrorMessage(errorMessage);
+                });
+            }
+            else{
+                //Sign in code
+                signInWithEmailAndPassword(auth, emailValue, passwordValue)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log("User signed in:", user);
+
+                    //dispatch an action to save the user data in the redux store
+                        const {uid, email, displayName} = userCredential.user;
+                        dispatch(addUser({uid: uid, email: email, displayName: displayName}));
+
+                    navigate("/browse");
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    setErrorMessage(errorMessage);
+                });
+            }
+
     };
 
     return(

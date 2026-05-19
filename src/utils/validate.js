@@ -4,7 +4,7 @@ const checkValidData=(email,password)=>{
     if(!emailRegex.test(email)){
         return "Invalid email format";
     }
-    const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/; // Minimum 6 characters, at least one letter and one number
+    const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/; // Minimum 4 characters, at least one letter and one number
     if(!passwordRegex.test(password)){
         return "Invalid password format";
     }
