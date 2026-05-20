@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
+import { USER_PROFILE_PIC, NETFLIX_LOGO } from "../utils/constant";
 
 const Header=()=>{
     const navigate= useNavigate();
@@ -56,15 +57,15 @@ const Header=()=>{
 
     
     return(
-        <div className="absolute px-8 py-4 bg-gradient-to-b from-black to-transparent w-full flex justify-between">
+        <div className="z-20 absolute px-8 py-4 bg-gradient-to-b from-black to-transparent w-full flex justify-between">
             <div className="">
-                <img className="w-36 cursor-pointer" src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo" />
+                <img className="w-36 cursor-pointer" src={NETFLIX_LOGO} alt="Netflix Logo" />
             </div>
             {user && (
                 <div className="flex items-center gap-4">
                     <img
                         className="w-10 h-10 rounded cursor-pointer"
-                        src="https://wallpapers.com/images/hd/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.jpg"
+                        src={USER_PROFILE_PIC}
                         alt="Netflix Profile"
                     />
                     <button className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer">{user?.displayName}</button>
