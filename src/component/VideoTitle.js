@@ -1,6 +1,9 @@
+import { FaPlay } from "react-icons/fa";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+
 const VideoTitle = ({ title, overview }) => {
     return (
-        <div className="z-10 w-screen aspect-video pt-[30%] px-16 absolute text-white bg-gradient-to-r from-black">
+        <div className="z-10 w-screen aspect-video pt-[15%] px-16 absolute text-white bg-gradient-to-r from-black">
             
             <h1 className="text-4xl font-bold drop-shadow-lg font-sans">
                 {title}
@@ -14,12 +17,14 @@ const VideoTitle = ({ title, overview }) => {
                 
                 {/* Play Button */}
                 <button className="flex items-center gap-2 bg-white text-black px-8 py-3 text-xl font-semibold rounded-md hover:bg-opacity-80 transition duration-200">
-                    ▶ Play
+                    <FaPlay />
+                    <span>Play</span>
                 </button>
 
                 {/* More Info Button */}
                 <button className="flex items-center gap-2 bg-gray-500 bg-opacity-70 text-white px-8 py-3 text-xl font-semibold rounded-md hover:bg-opacity-50 transition duration-200">
-                    ⓘ More Info
+                     <AiOutlineInfoCircle />
+                    <span>More Info</span>
                 </button>
 
             </div>
