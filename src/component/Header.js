@@ -8,12 +8,20 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
 import { USER_PROFILE_PIC, NETFLIX_LOGO } from "../utils/constant";
+import {toggleGptView} from "../utils/gptSlice"
 
 const Header=()=>{
     const navigate= useNavigate();
     const dispatch= useDispatch();
 
     const user= useSelector((state)=> state.user);
+    const showGptview= useSelector(store=> store.gpt.showGptView);
+
+    const handleGptPage=()=>{
+        //toggle Gpt Search page
+        dispatch(toggleGptView());
+
+    }
 
     const handleSignout=()=>{
         // Sign out the user and navigate to login page
@@ -74,6 +82,10 @@ const Header=()=>{
                         className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
                     >
                         Sign Out
+                    </button>
+                    <button className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
+                    onClick={handleGptPage}>
+                        {!showGptview? "GPT-search": "HomePage"}
                     </button>
                 </div>
             )}
